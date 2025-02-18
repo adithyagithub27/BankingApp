@@ -1,0 +1,30 @@
+<!-- templates/profile.html -->
+{% extends "base.html" %}
+{% block title %}Profile Management{% endblock %}
+
+{% block content %}
+<h2>Profile Management</h2>
+<form method="POST" action="{{ url_for('profile.profile') }}" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label for="first_name" class="form-label">First Name</label>
+    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="last_name" class="form-label">Last Name</label>
+    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+  </div>
+  <div class="mb-3">
+    <label for="address" class="form-label">Address</label>
+    <textarea class="form-control" id="address" name="address" rows="3">{{ user.address }}</textarea>
+  </div>
+  <div class="mb-3">
+    <label for="profile_pic" class="form-label">Profile Picture</label>
+    <input type="file" class="form-control" id="profile_pic" name="profile_pic">
+  </div>
+  <button type="submit" class="btn btn-primary">Update Profile</button>
+</form>
+{% endblock %}

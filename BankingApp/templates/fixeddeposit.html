@@ -1,0 +1,54 @@
+<!-- templates/fixeddeposit.html -->
+{% extends "base.html" %}
+{% block title %}Fixed Deposit & Interest Calculator{% endblock %}
+
+{% block content %}
+<h2>Fixed Deposit & Interest Calculator</h2>
+<form method="POST" action="{{ url_for('fixeddeposit.fixeddeposit') }}">
+  <div class="mb-3">
+    <label for="fd-amount" class="form-label">Deposit Amount</label>
+    <input type="number" class="form-control" id="fd-amount" name="fd_amount" placeholder="Enter deposit amount" required>
+  </div>
+  <div class="mb-3">
+    <label for="fd-duration" class="form-label">Duration (Years)</label>
+    <select class="form-select" id="fd-duration" name="fd_duration" required>
+      <option value="">Select Duration</option>
+      <option value="0.5">6 Months</option>
+      <option value="1">1 Year</option>
+      <option value="2">2 Years</option>
+      <option value="3">3 Years</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Interest Rate</label>
+    <input type="text" class="form-control" id="fd-interest-rate" value="5.0%" readonly>
+  </div>
+  <button type="submit" class="btn btn-info">Open Fixed Deposit</button>
+</form>
+
+<h3 class="mt-5">Fixed Deposit History</h3>
+<table class="table table-hover">
+  <thead>
+    <tr>
+      <th>FD ID</th>
+      <th>Amount</th>
+      <th>Duration</th>
+      <th>Interest Rate</th>
+      <th>Maturity Amount</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for fd in fixed_deposits %}
+    <tr>
+      <td>{{ fd.id }}</td>
+      <td>${{ fd.amount }}</td>
+      <td>{{ fd.duration }} Years</td>
+      <td>{{ fd.interest_rate }}%</td>
+      <td>${{ fd.maturity_amount }}</td>
+      <td>{{ fd.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

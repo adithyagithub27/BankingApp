@@ -1,0 +1,49 @@
+<!-- templates/dashboard.html -->
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+
+{% block content %}
+<h2>Dashboard</h2>
+<h4>Account Summary</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Account Number</th>
+      <th>Balance</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for account in accounts %}
+    <tr>
+      <td>{{ account.accountNumber }}</td>
+      <td>${{ account.balance }}</td>
+      <td>{{ account.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h4>Recent Transactions</h4>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th>Description</th>
+      <th>Amount</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for txn in transactions %}
+    <tr>
+      <td>{{ txn.date }}</td>
+      <td>{{ txn.description }}</td>
+      <td>${{ txn.amount }}</td>
+      <td>{{ txn.status }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

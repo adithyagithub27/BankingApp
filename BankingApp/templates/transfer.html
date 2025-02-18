@@ -1,0 +1,40 @@
+<!-- templates/transfer.html -->
+{% extends "base.html" %}
+{% block title %}Funds Transfer{% endblock %}
+
+{% block content %}
+<h2>Funds Transfer</h2>
+<form method="POST" action="{{ url_for('transfer.transfer') }}">
+  <div class="mb-3">
+    <label for="from_account" class="form-label">From Account</label>
+    <select class="form-select" id="from_account" name="from_account" required>
+      <option value="acc1">Account 1</option>
+      <option value="acc2">Account 2</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label for="dest-account" class="form-label">Destination Account</label>
+    <input type="text" class="form-control" id="dest-account" name="dest_account" required>
+  </div>
+  <div class="mb-3">
+    <label for="transfer-amount" class="form-label">Amount</label>
+    <input type="number" class="form-control" id="transfer-amount" name="amount" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Transfer Type</label><br>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="transfer_type" id="immediate" value="immediate" required>
+      <label class="form-check-label" for="immediate">Immediate</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="transfer_type" id="scheduled" value="scheduled">
+      <label class="form-check-label" for="scheduled">Scheduled</label>
+    </div>
+  </div>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-success">Submit Transfer</button>
+</form>
+{% endblock %}
