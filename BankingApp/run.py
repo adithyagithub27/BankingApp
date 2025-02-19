@@ -4,6 +4,8 @@ from flask import redirect, url_for
 
 app = create_app()
 
+
+
 @app.route("/")
 def index():
     # Redirect to login or dashboard, depending on your preference.

@@ -23,10 +23,19 @@
     <label class="form-label">Interest Rate</label>
     <input type="text" class="form-control" id="fd-interest-rate" value="5.0%" readonly>
   </div>
-  <button type="submit" class="btn btn-info">Open Fixed Deposit</button>
+  {% if calculated_maturity %}
+  <div class="mb-3">
+    <label class="form-label">Calculated Maturity Amount</label>
+    <input type="text" class="form-control" value="${{ "{:,.2f}".format(calculated_maturity) }}" readonly>
+  </div>
+  {% endif %}
+  <div class="mb-3">
+    <button type="submit" name="calculate" value="calculate" class="btn btn-info">Calculate Interest</button>
+    <button type="submit" name="open" value="open" class="btn btn-primary">Open Fixed Deposit</button>
+  </div>
 </form>
 
-<h3 class="mt-5">Fixed Deposit History</h3>
+<h3 class="mt-5">Your Fixed Deposits</h3>
 <table class="table table-hover">
   <thead>
     <tr>
@@ -36,17 +45,27 @@
       <th>Interest Rate</th>
       <th>Maturity Amount</th>
       <th>Status</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
     {% for fd in fixed_deposits %}
     <tr>
       <td>{{ fd.id }}</td>
-      <td>${{ fd.amount }}</td>
+      <td>${{ "{:,.2f}".format(fd.amount) }}</td>
       <td>{{ fd.duration }} Years</td>
       <td>{{ fd.interest_rate }}%</td>
-      <td>${{ fd.maturity_amount }}</td>
+      <td>${{ "{:,.2f}".format(fd.maturity_amount) }}</td>
       <td>{{ fd.status }}</td>
+      <td>
+        {% if fd.status == "Active" %}
+        <form method="POST" action="{{ url_for('fixeddeposit.close_fixeddeposit', fd_id=fd.id) }}">
+          <button type="submit" class="btn btn-danger btn-sm">Close FD</button>
+        </form>
+        {% else %}
+        N/A
+        {% endif %}
+      </td>
     </tr>
     {% endfor %}
   </tbody>

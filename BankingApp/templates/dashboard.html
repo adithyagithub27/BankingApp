@@ -2,14 +2,15 @@
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
 
-
 {% block content %}
 <h2>Dashboard</h2>
+
 <h4>Account Summary</h4>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>Account Number</th>
+      <th>Account Holder</th>
       <th>Balance</th>
       <th>Status</th>
     </tr>
@@ -17,9 +18,10 @@
   <tbody>
     {% for account in accounts %}
     <tr>
-      <td>{{ account.accountNumber }}</td>
-      <td>${{ account.balance }}</td>
-      <td>{{ account.status }}</td>
+      <td>{{ account.account_number }}</td>
+      <td>{{ account.owner.first_name }} {{ account.owner.last_name }}</td>
+      <td>${{ "{:,.2f}".format(account.balance) }}</td>
+      <td>Active</td>
     </tr>
     {% endfor %}
   </tbody>
@@ -38,9 +40,9 @@
   <tbody>
     {% for txn in transactions %}
     <tr>
-      <td>{{ txn.date }}</td>
-      <td>{{ txn.description }}</td>
-      <td>${{ txn.amount }}</td>
+      <td>{{ txn.timestamp }}</td>
+      <td>{{ txn.from_account }} → {{ txn.to_account }}</td>
+      <td>${{ "{:,.2f}".format(txn.amount) }}</td>
       <td>{{ txn.status }}</td>
     </tr>
     {% endfor %}
