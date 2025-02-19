@@ -17,7 +17,7 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
+        if user and (user.password, password):
             login_user(user)
             flash("Logged in successfully.", "success")
             # Redirect based on role
@@ -51,7 +51,7 @@ def signup():
         new_user = User(
             username=username,
             email=email,
-            password=generate_password_hash(password, method="pbkdf2:sha256"),
+            password=password,
             first_name=first_name,
             last_name=last_name,
             role="customer"

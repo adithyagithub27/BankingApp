@@ -21,35 +21,54 @@
   </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-    <div class="container">
-      <a class="navbar-brand" href="#">  
-        <img src="{{ url_for('static', filename='images/logo.png') }}" alt="YesM Bank Logo" height="30" class="d-inline-block align-text-top">
-        {{ config.SITE_NAME or "Yes-M Bank" }}
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
-              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          {% if current_user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('transfer.transfer') }}">Transfer</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('profile.profile') }}">Profile</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('fixeddeposit.fixeddeposit') }}">FD</a></li>
-            {% if current_user.role == 'admin' %}
-              <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.admin_dashboard') }}">Admin</a></li>
-            {% endif %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a></li>
-          {% else %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
-          {% endif %}
-        </ul>
-      </div>
-    </div>
-  </nav>
-  
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+        <div class="container">
+          <a class="navbar-brand" href="#">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="YesM Bank Logo" height="30" class="d-inline-block align-text-top">
+            {{ config.SITE_NAME or "Yes-M Bank" }}
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+                  aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              {% if current_user.is_authenticated %}
+                {% if current_user.role == 'admin' %}
+                  <!-- Admin sees only Admin link and Logout -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('admin.admin_dashboard') }}">Admin</a>
+                  </li>
+                {% else %}
+                  <!-- Non-admin users see normal links -->
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('dashboard.dashboard') }}">Dashboard</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('transfer.transfer') }}">Transfer</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('profile.profile') }}">Profile</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('fixeddeposit.fixeddeposit') }}">FD</a>
+                  </li>
+                {% endif %}
+                <!-- Everyone sees Logout if authenticated -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+                </li>
+              {% else %}
+                <!-- Not logged in -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('auth.login') }}">Login</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
   <div class="container mt-4">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
