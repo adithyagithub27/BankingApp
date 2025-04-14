@@ -4,52 +4,47 @@
 
 {% block content %}
 <h2>Admin Dashboard - Customer Management</h2>
-{% if add_customer %}
-  <h4>Add New Customer</h4>
-  <form method="POST" action="{{ url_for('admin.add_customer') }}">
-    <div class="mb-3">
-      <label for="first_name" class="form-label">First Name</label>
-      <input type="text" class="form-control" id="first_name" name="first_name" required>
-    </div>
-    <div class="mb-3">
-      <label for="last_name" class="form-label">Last Name</label>
-      <input type="text" class="form-control" id="last_name" name="last_name" required>
-    </div>
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" id="username" name="username" required>
-    </div>
-    <div class="mb-3">
-      <label for="email" class="form-label">Email</label>
-      <input type="email" class="form-control" id="email" name="email" required>
-    </div>
-    <div class="mb-3">
-      <label for="password" class="form-label">Initial Password</label>
-      <input type="password" class="form-control" id="password" name="password" required>
-    </div>
-    <button type="submit" class="btn btn-success">Add Customer</button>
-  </form>
-{% else %}
-  <a href="{{ url_for('admin.add_customer') }}" class="btn btn-primary mb-3">Add New Customer</a>
-  <table class="table table-bordered">
+
+<div class="row mb-3">
+  <!-- Search Input -->
+  <div class="col-md-4">
+    <input type="text" class="form-control" id="searchInput" placeholder="Search by name or email...">
+  </div>
+  <!-- Select All Checkbox -->
+  <div class="col-md-4 d-flex align-items-center">
+    <input type="checkbox" id="selectAll" class="form-check-input me-2">
+    <label for="selectAll" class="form-check-label">Select All</label>
+  </div>
+  <!-- Add New Customer Button -->
+  <div class="col-md-4 text-end">
+    <a href="{{ url_for('admin.add_customer') }}" class="btn btn-primary">Add New Customer</a>
+  </div>
+</div>
+
+<form id="userForm" method="POST" action="{{ url_for('admin.delete_multiple_users') }}">
+  <table class="table table-bordered" id="userTable">
     <thead>
       <tr>
-        <th>Customer ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Last Login</th>
-        <th>Actions</th>
+        <th scope="col">Select</th>
+        <th scope="col">Customer ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Last Login</th>
+        <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
       {% for customer in customers %}
       <tr>
-        <td>{{ customer.id }}</td>
-        <td>{{ customer.first_name }} {{ customer.last_name }}</td>
-        <td>{{ customer.email }}</td>
-        <td>{{ customer.last_login }}</td>
         <td>
-          <!-- For simplicity, only delete action is shown -->
+          <input type="checkbox" name="selected_users" value="{{ customer.id }}" class="row-checkbox form-check-input">
+        </td>
+        <td>{{ customer.id }}</td>
+        <td class="searchable">{{ customer.first_name }} {{ customer.last_name }}</td>
+        <td class="searchable">{{ customer.email }}</td>
+        <td>{{ customer.last_login or "N/A" }}</td>
+        <td>
+          <!-- Single delete action as an example -->
           <form method="POST" action="{{ url_for('admin.delete_customer', customer_id=customer.id) }}" style="display:inline;">
             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
           </form>
@@ -58,5 +53,55 @@
       {% endfor %}
     </tbody>
   </table>
-{% endif %}
+
+  <!-- Example: Bulk delete button for selected users -->
+  <button type="submit" class="btn btn-danger btn-sm mt-2">Delete Selected</button>
+</form>
+
+<!-- JavaScript for search and select-all -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // 1. SEARCH FUNCTIONALITY
+  const searchInput = document.getElementById('searchInput');
+  const userTable = document.getElementById('userTable');
+  const rows = userTable.getElementsByTagName('tr');
+
+  searchInput.addEventListener('keyup', function() {
+    const filter = searchInput.value.toLowerCase();
+    for (let i = 1; i < rows.length; i++) {
+      // Skip the header row (i=0)
+      let tds = rows[i].getElementsByClassName('searchable');
+      let rowText = '';
+      for (let j = 0; j < tds.length; j++) {
+        rowText += tds[j].textContent.toLowerCase() + ' ';
+      }
+      // If row text matches the filter, display it; otherwise hide
+      if (rowText.indexOf(filter) > -1) {
+        rows[i].style.display = '';
+      } else {
+        rows[i].style.display = 'none';
+      }
+    }
+  });
+
+  // 2. SELECT ALL CHECKBOX
+  const selectAllCheckbox = document.getElementById('selectAll');
+  const rowCheckboxes = document.querySelectorAll('.row-checkbox');
+
+  selectAllCheckbox.addEventListener('change', function() {
+    rowCheckboxes.forEach(function(checkbox) {
+      checkbox.checked = selectAllCheckbox.checked;
+    });
+  });
+
+  // Uncheck 'Select All' if any row is manually unchecked
+  rowCheckboxes.forEach(function(checkbox) {
+    checkbox.addEventListener('change', function() {
+      if (!this.checked) {
+        selectAllCheckbox.checked = false;
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

@@ -44,5 +44,22 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+
+        from app.models import User
+        # 1. Check if an admin user already exists
+        admin_user = User.query.filter_by(username="admin").first()
+        if not admin_user:
+            # 2. Create an admin user
+            admin_user = User(
+                username="admin",
+                email="admin@example.com",
+                password="adminpass",  # Or hashed if you prefer
+                role="admin"
+            )
+            db.session.add(admin_user)
+            db.session.commit()
+            print("Admin user created: admin / adminpass")
+        else:
+            print("Admin user already exists.")
     
     return app

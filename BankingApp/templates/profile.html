@@ -4,27 +4,38 @@
 
 {% block content %}
 <h2>Profile Management</h2>
-<form method="POST" action="{{ url_for('profile.profile') }}" enctype="multipart/form-data">
+
+
+
+<form method="POST" action="{{ url_for('profile.profile') }}">
   <div class="mb-3">
     <label for="first_name" class="form-label">First Name</label>
-    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name }}" required>
+    <input type="text" class="form-control" id="first_name" name="first_name" value="{{ user.first_name or '' }}">
   </div>
+
   <div class="mb-3">
     <label for="last_name" class="form-label">Last Name</label>
-    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name }}" required>
+    <input type="text" class="form-control" id="last_name" name="last_name" value="{{ user.last_name or '' }}">
   </div>
+
+  <!-- Radio Buttons: Gender -->
   <div class="mb-3">
-    <label for="email" class="form-label">Email</label>
-    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+    <label class="form-label">Gender</label><br>
+    <input type="radio" id="gender_male" name="gender" value="male"
+           {% if user.gender == 'male' %}checked{% endif %}>
+    <label for="gender_male">Male</label>
+    <input type="radio" id="gender_female" name="gender" value="female"
+           {% if user.gender == 'female' %}checked{% endif %}>
+    <label for="gender_female">Female</label>
   </div>
-  <div class="mb-3">
-    <label for="address" class="form-label">Address</label>
-    <textarea class="form-control" id="address" name="address" rows="3">{{ user.address }}</textarea>
+
+  <!-- Checkbox: Subscribe to Newsletter -->
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="newsletter" name="newsletter"
+           {% if user.newsletter_subscribed %}checked{% endif %}>
+    <label for="newsletter" class="form-check-label">Subscribe to Newsletter</label>
   </div>
-  <div class="mb-3">
-    <label for="profile_pic" class="form-label">Profile Picture</label>
-    <input type="file" class="form-control" id="profile_pic" name="profile_pic">
-  </div>
+
   <button type="submit" class="btn btn-primary">Update Profile</button>
 </form>
 {% endblock %}

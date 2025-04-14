@@ -12,20 +12,19 @@ auth_bp = Blueprint("auth", __name__)
 
 @auth_bp.route("/login", methods=["GET", "POST"])
 def login():
-    """
-    Login route that compares the stored password (plain text) to the entered password.
-    If they match exactly, the user is logged in. Otherwise, an error is displayed.
-    """
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
+        print("Submitted:", username, password)  # Debug print
         user = User.query.filter_by(username=username).first()
-
-        # Direct equality check for plain-text passwords (NOT secure in production!)
+        if user:
+            print("Found user:", user.username, user.password)  # Debug print
+        else:
+            print("User not found")
+        
         if user and user.password == password:
             login_user(user)
             flash("Logged in successfully.", "success")
-            # Redirect based on role
             if user.role == "admin":
                 return redirect(url_for("admin.admin_dashboard"))
             else:
@@ -34,6 +33,7 @@ def login():
             flash("Invalid username or password.", "danger")
 
     return render_template("login.html")
+
 
 @auth_bp.route("/signup", methods=["GET", "POST"])
 def signup():

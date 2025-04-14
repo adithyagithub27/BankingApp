@@ -13,6 +13,8 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime, default=datetime.utcnow)
     # Relationship: A user can have one or more accounts
     accounts = db.relationship('Account', backref='owner', lazy=True)
+    gender = db.Column(db.String(10))  # 'male', 'female'
+    newsletter_subscribed = db.Column(db.Boolean, default=False)
 
 @login_manager.user_loader
 def load_user(user_id):
